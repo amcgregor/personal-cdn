@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+            * { cursor: default; }
+            table { border-collapse: collapse; margin-right: 20px; }
+            table#field { float: left; }
+            table#field th, td { width: 22px; height: 22px; }
+            th, td { font-size: 12px; line-height: 1; text-align: center; vertical-align: middle; }
+            td { border: 1px solid #ccc; width: 22px; height: 22px; font-size: 12px; line-height: 1; font-weight: bold; }
+            table tr:first-child td:first-child { border-width: 0px; }
+            #plot { width: 100%; height: 300px; }
+            
+            .free { }
+            .free:hover { }
+            .p1 { color: green; }
+            .p2 { color: red; }
+            .p3 { color: blue; }
+            .p4 { color: magenta; }
+        </style>
+    </head>
+    <body>
+        <table id="field">
+        </table>
+        
+        <table id="players">
+            <tr><th>Player Name</th><th>Score</th><th>Time</th></tr>
+        </table>
+        
+        <button onclick="autoPlayRandom()">PLAY ALL THE GAMES</button>
+        
+        <div id="plot"></div>
+        
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <!-- <script src="http://people.iola.dk/olau/flot/jquery.flot.js"></script> -->
+        
+        <script type="text/javascript">
+            // Mortal Hanoi [Code Name] Technical Demonstration
+            // Copyright (c) 2012 Alice Bevan-McGregor
+            // All Rights Reserved
+            // Contact: alice@gothcandy.com
+            // No warranty, express or implied.
+            // Will contain bugs. Abandon hope all ye who enter here.
+            
+            var size = prompt('What size, squared, do you want to try?', '7');
+            var players = prompt('How many players? (2-4)', '2');
+            var turn = 1;
+            var triggered = new Array();
+            var scores = [];
+            var round = 0;
+            
+            for ( var i = 0; i < players; i ++ ) scores.push({data: [], lines: {show: true, steps: true}});
+            
+            //var plot = $.plot("#plot", scores, {series: { shadowSize: 0 }, colors: ["green", "red", "blue", "magenta"], xaxis: {show: false}, yaxis: {show: false} });
+            
+            var table = $('table#field');
+            
+            // Create the header cells.
+            var row = $('<tr><td></td></tr>');
+            for ( var x = 0; x < size; x++ )
+                $('<th>' + (x + 1) + '</th>').appendTo(row);
+            
+            row.appendTo(table);
+            
+            // Create that many cells.
+            for ( var y = 0; y < size; y++ ) {
+                var row = $('<tr><th>'+(y+1)+'</th></tr>');
+                
+                for ( var x = 0; x < size; x++ )
+                    $('<td></td>').appendTo(row);
+                
+                row.appendTo(table);
+            }
+            
+            
+            function getCell(x, y) {
+                return $('table#field tr:eq('+y+') td:eq('+(x-1)+')');
+            }
+            
+            function setCell(player, x, y, n) {
+                var cell = getCell(x, y).text(n).removeClass('free p1 p2 p3 p4');
+                if ( n > 0 ) cell.addClass('p'+player);
+            }
+            
+            function getPlayer(cell) {
+                if ( cell.hasClass('p1') ) return 1;
+                if ( cell.hasClass('p2') ) return 2;
+                if ( cell.hasClass('p3') ) return 3;
+                if ( cell.hasClass('p4') ) return 4;
+                return -1;
+            }
+            
+            function getValue(cell) {
+                return Number(cell.text());
+            }
+            
+            
+            // Populate players.
+            pos = [[1,1], [size, size], [size, 1], [1, size]];
+            for ( var p = 0; p < players; p++ ) {
+                $('<tr><th>Player '+(p+1)+'</th><td id="p'+(p+1)+'s">1</td><td>—</td></tr>').appendTo('#players');
+                
+                setCell(p+1, pos[p][1], pos[p][0], 1)
+            }
+            
+            
+            function turnStart(player) {
+                triggered = new Array();
+            }
+            
+            function turnOver(player) {
+                // Update scores.
+                for ( var p = 0; p < players; p++ ) {
+                    var t = 0;
+                    $('td.p' + (p+1)).each(function(){
+                        t += Number($(this).text());
+                    });
+                    
+                    scores[p].data.push([round, t]);
+                    if ( round > 5 && $('td.p' + (p+1)).length <= 1 ) {
+                        $('#field td.p' + (p + 1)).text('').removeClass('p'+(p+1));
+                    }
+                    
+                    $('#p'+(p+1)+'s').text($('td.p' + (p+1)).length + ' ('+t+')')
+                }
+                
+                turn += 1;
+                var done = false;
+                
+                if ( turn > players ) turn = 1;
+                while ( $('td.p' + turn).length == 0 ) {
+                    turn++;
+                    if ( turn > players && !done ) {
+                        turn = 1;
+                        done = true;
+                    } else if ( done ) {
+                        turn = -1;
+                    }
+                }
+                
+                //plot.setData(scores);
+                //plot.setupGrid();
+                //plot.draw();
+                
+                round++;
+            }
+            
+            function sides(x, y) {
+                var s = new Array();
+                if ( x > 1 ) s.push([-1, 0]);
+                if ( x < size ) s.push([1, 0]);
+                if ( y > 1 ) s.push([0, -1]);
+                if ( y < size ) s.push([0, 1]);
+                return s;
+            }
+            
+            function _place(player, x, y, initial) {
+                var cell = getCell(x, y);
+                var value = getValue(cell);
+                var p = getPlayer(cell);
+                
+                if ( p != -1 && player != p )
+                    p = player;
+                
+                var nvalue = value + 1;
+                if ( p == -1 ) p = player;
+                
+                // window.console.log("Placing: (p, x, y, ov, nv)", p, x, y, value, nvalue);
+                setCell(p, x, y, nvalue);
+                
+                if ( nvalue >= sides(x, y).length ) {
+                    triggered.push([x, y, initial]);
+                }
+            }
+            
+            function placeStone() {
+                if ( turn == -1 ) return;
+                
+                var self = $(this);
+                var x = self.index();
+                var y = self.parent().index();
+                var cell = getCell(x, y);
+                var player = getPlayer(cell);
+                
+                //window.console.log("turn, self, x, y, cell, player", turn, self, x, y, cell, player);
+                
+                if ( player != -1 && player != turn ) {
+                    //window.console.log("Clicked on other player's space.");
+                    return;
+                }
+                
+                var tests = [[0, -1], [0, 1], [-1, 0], [1, 0]];
+                var ok = player == turn;
+                
+                for ( var i = 0; i < 4; i++ ) {
+                    var tx = x + tests[i][0];
+                    var ty = y + tests[i][1];
+                    
+                    //window.console.log("Checking vs. ("+tx+", "+ty+").");
+                    
+                    if ( tx < 0 || tx > size ) { continue; } // window.console.log('Skipping over X.'); continue; }
+                    if ( ty < 0 || ty > size ) { continue; } // window.console.log('Skipping over Y.'); continue; }
+                    
+                    var p = getPlayer(getCell(tx, ty));
+                    
+                    if ( p == turn ) {
+                        ok = true;
+                        //window.console.log("Success; this cell is neighbouring occupied territory.");
+                    } else {
+                        //window.console.log("Player doesn't match.", p, turn);
+                    }
+                    
+                    //window.console.log("Success.")
+                }
+                
+                if ( !ok ) {
+                    return;
+                }
+                
+                _place(turn, x, y, true);
+                
+                //window.console.log(">>>> Triggered:", triggered);
+                
+                while ( triggered.length ) {
+                    var l = triggered.shift();
+                    var x = l[0];
+                    var y = l[1];
+                    var s = sides(x, y);
+                    var cell = getCell(x, y);
+                    var value = getValue(cell);
+                    var p = getPlayer(cell);
+                    
+                    if ( value < s.length ) continue;
+                    
+                    var nv = value - s.length; // + (l[2] ? 1 : 0);
+                    setCell(p, x, y, nv == 0 ? '' : nv);
+                        
+                    for ( var i = 0; i < s.length; i++ ) {
+                        var nx = x + s[i][0];
+                        var ny = y + s[i][1];
+                        _place(p, nx, ny);
+                    }
+                    
+                    p = 0;
+                    var pn = -1;
+                    for ( var i = 0; i < players; i++ ) {
+                        if ( $('td.p' + (i+1)).length ) {
+                            p++;
+                            pn = i;
+                        }
+                    }
+                    if ( p == 1 ) {
+                        turn = -1;
+                        alert("Player " + (pn+1) + " is the winner!");
+                        return;
+                    }
+                }
+                
+                turnOver(turn);
+                turnStart(turn);
+            }
+            
+            turnStart(1);
+            
+            // Attach click handler.
+            $('table#field td').click(placeStone);
+            
+            function autoPlaySet() {
+                var loc = [[1,1], [6,7], [2,6], [1,7]];
+                var x = loc[turn-1][0];
+                var y = loc[turn-1][1];
+                placeStone.apply(getCell(x, y));
+                
+                if ( turn != -1 )
+                    setTimeout(autoPlaySet, 250);
+            }
+            
+            function autoPlayRandom() {
+                var possibilities = $('td.p' + turn);
+                if ( possibilities.length == 0 ) return;
+                var randomNum = Math.floor(Math.random() * (possibilities.length - 1));
+                var loc = possibilities[randomNum];
+                placeStone.apply(loc);
+                
+                if ( turn != -1 )
+                    setTimeout(autoPlayRandom, 250);
+            }
+        </script>
+    </body>
+</html>
