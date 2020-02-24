@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+            * { cursor: default; }
+            html, body { background-color: #f6f6f6; }
+            table { border-collapse: collapse; margin-right: 20px; }
+            table#field { float: left; }
+            table#field th, table#field td, table.field th, table.field td { width: 22px; height: 22px; }
+            th, td { font-size: 12px; line-height: 1; text-align: center; vertical-align: middle; }
+            td { border: 1px solid #ccc; width: 22px; height: 22px; font-size: 12px; line-height: 1; font-weight: bold; background-color: white; }
+            table tr:first-child td:first-child { border-width: 0px; }
+            #plot { width: 100%; height: 300px; }
+            
+            .attn {
+                -webkit-animation-duration: 5s;
+                -webkit-animation-iteration-count: infinite;
+            }
+            
+            .p1.attn {
+                -webkit-animation-name: greenPulse;
+            }
+
+            .p2.attn {
+                -webkit-animation-name: redPulse;
+            }
+
+            .p3.attn {
+                -webkit-animation-name: bluePulse;
+            }
+
+            .p4.attn {
+                -webkit-animation-name: magentaPulse;
+            }
+            
+            @-webkit-keyframes greenPulse {
+                from { background-color: #fff; }
+                50% { background-color: #cfc; }
+                to { background-color: #fff; }
+            }
+
+            @-webkit-keyframes redPulse {
+                from { background-color: #fff; }
+                50% { background-color: #fcc; }
+                to { background-color: #fff; }
+            }
+
+            @-webkit-keyframes bluePulse {
+                from { background-color: #fff; }
+                50% { background-color: #ccf; }
+                to { background-color: #fff; }
+            }
+
+            @-webkit-keyframes magentaPulse {
+                from { background-color: #fff; }
+                50% { background-color: #fcf; }
+                to { background-color: #fff; }
+            }
+            
+            .free { }
+            .free:hover { }
+            .p1 { color: green; }
+            .p2 { color: red; }
+            .p3 { color: blue; }
+            .p4 { color: magenta; }
+            
+            .tc { text-align: center; }
+            .tc table { float: left; }
+            .cf { clear: both; }
+            
+            table caption { font-size: 90%; font-weight: bold; margin: 0; padding: 0 0 0 25px; }
+        </style>
+    </head>
+    <body>
+        
+        <h1>{Insert Name Here}</h1>
+        <address>© 2012 <a href="mailto:alice@gothcandy.com">Alice Bevan-McGregor</a>, all rights reserved.</address>
+        
+        <h2>Introduction</h2>
+        
+        <p>
+            This game is played on a <em>field</em> containing <em>territories</em> with each player having a chance to place a <em>stone</em>, one after the other.  The usual shape for a <em>field</em> is a square grid, though other possibilities exist such as triangular, hexagonal, or even Risk™ style maps.  On square grids between two and four players can play, other grids have differing numbers of corners.
+        </p>
+        
+        <p>
+            Each turn a player places a stone in a valid location: any territory already controlled by that player or a territory that is empty and immediately adjacent to an owned territory.  The goal of the game is to eliminate your enemies by capturing their stones and territory—when there is only one player left on the board, that player is the winner.  You capture by having a territory you own reach <em>critical mass</em>, spreading out onto the territories surrounding it and claiming ownership of those territories.  In this way you can set up <em>chain reactions</em>.  These chain reactions very quickly become <strong>complicated</strong>.
+        </p>
+        
+        <p>
+            Each game has three primary phases, and several strategies.
+        </p>
+        
+        
+        <h2>Phases</h2>
+        
+        <dl>
+            <dt>Build-Up</dt>
+            <dd>At the beginning of the game, when there is no chance of inter-player conflict, you are free to place as you will.  Keep in mind the fact that there <em>will</em> eventually be conflict, and as such you will want to build the most defensible position possible.</dd>
+            
+            <dt>Strategic Advancement</dt>
+            <dd>Once your territories are separated from your enemies by only one empty space you need to start thinking about your front line.  You want to ensure that you have a strong position to attack from (surrounding an enemy occupied territory on at least two sides), that your own territories won't chain react with your enemies after a <em>placement race</em>, and that if the enemy will win a placement race, that that victory won't compromise the rest of your territory through chain reaction.</dd>
+            
+            <dt>Endgame</dt>
+            <dd>The final phase of the game tends to require careful thought and a mental exploration of how chain reactions occur.  If you aren't careful you can chain react such that your own territories are near critical mass, allowing your otherwise devistated enemy to rapidly capture back the board, often times turning what appears to be a massive loss into a stunning victory!</dd>
+        </dl>
+        
+        <p>
+            Players begin standard games with one stone in their designated corner.  The standard first move would be to move into your already occupied territory causing it to reach critical mass.  This is called an <em>efficient move</em> as it gives you the greatest territory gain for the least amount of work. This is what that looks like:
+        </p>
+        
+        <div class="tc">
+            <table class="field">
+                <caption>Starting Positions</caption>
+                <tr><th></th><th>1</th><th>2</th><th>⋯</th><th>n-1</th><th>n</th></tr>
+                <tr><th>1</th><td class="p1 attn">1</td><td></td><td></td><td></td><td class="p4 attn">1</td></tr>
+                <tr><th>2</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>⋮</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>n-1</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>n</th><td class="p3 attn">1</td><td></td><td></td><td></td><td class="p2 attn">1</td></tr>
+            </table>
+            
+            <table class="field">
+                <caption>Placement</caption>
+                <tr><th></th><th>1</th><th>2</th><th>⋯</th><th>n-1</th><th>n</th></tr>
+                <tr><th>1</th><td class="p1 attn">2</td><td></td><td></td><td></td><td class="p4">1</td></tr>
+                <tr><th>2</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>⋮</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>n-1</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>n</th><td class="p3">1</td><td></td><td></td><td></td><td class="p2">1</td></tr>
+            </table>
+            
+            <table class="field">
+                <caption>Result</caption>
+                <tr><th></th><th>1</th><th>2</th><th>⋯</th><th>n-1</th><th>n</th></tr>
+                <tr><th>1</th><td class="p1"></td><td class="p1 attn">1</td><td></td><td></td><td class="p4">1</td></tr>
+                <tr><th>2</th><td class="p1 attn">1</td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>⋮</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>n-1</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>n</th><td class="p3">1</td><td></td><td></td><td></td><td class="p2">1</td></tr>
+            </table>
+            
+            <div class="cf"></div>
+        </div>
+        
+        <p>
+            The critical mass for a given territory is the number of exits from that territory.  On a grid, this means the number of surrounding squares north/south and east/west.  Corners reach critical mass at <b>2</b>, edges at <b>3</b>, and central squares at <b>4</b>.
+        </p>
+        
+        <p>
+            Critical mass is vital for capturing enemy territories, not just efficiently expanding into empty ones.  In fact, critical mass is the only method whereby you can attack an enemy!  An example of a green capture of red territory would be:
+        </p>
+
+        <div class="tc">
+            <table class="field">
+                <tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>⋯</th></tr>
+                <tr><th>1</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>2</th><td></td><td class="p1 attn">3</td><td class="p2 attn">2</td><td></td><td></td></tr>
+                <tr><th>3</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>⋮</th><td></td><td></td><td></td><td></td><td></td></tr>
+            </table>
+            
+            <table class="field">
+                <tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>⋯</th></tr>
+                <tr><th>1</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>2</th><td></td><td class="p1 attn">4</td><td class="p2">2</td><td></td><td></td></tr>
+                <tr><th>3</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>⋮</th><td></td><td></td><td></td><td></td><td></td></tr>
+            </table>
+            
+            <table class="field">
+                <tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>⋯</th></tr>
+                <tr><th>1</th><td></td><td class="p1 attn">1</td><td></td><td></td><td></td></tr>
+                <tr><th>2</th><td class="p1 attn">1</td><td class="p1 attn"></td><td class="p1 attn">3</td><td></td><td></td></tr>
+                <tr><th>3</th><td></td><td class="p1 attn">1</td><td></td><td></td><td></td></tr>
+                <tr><th>⋮</th><td></td><td></td><td></td><td></td><td></td></tr>
+            </table>
+            
+            <div class="cf"></div>
+        </div>
+        
+        <p>
+            As you can see, green captured not just the territory, but also the red player's stones that were already there.  This gets especially interesting when you create chain reactions.  Given the same setup before, except with red controlling 3 stones instead of two gives you:
+        </p>
+        
+        <div class="tc">
+            <table class="field">
+                <tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>⋯</th></tr>
+                <tr><th>1</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>2</th><td></td><td class="p1 attn">3</td><td class="p2 attn">3</td><td></td><td></td></tr>
+                <tr><th>3</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>⋮</th><td></td><td></td><td></td><td></td><td></td></tr>
+            </table>
+            
+            <table class="field">
+                <tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>⋯</th></tr>
+                <tr><th>1</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>2</th><td></td><td class="p1 attn">4</td><td class="p2">3</td><td></td><td></td></tr>
+                <tr><th>3</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>⋮</th><td></td><td></td><td></td><td></td><td></td></tr>
+            </table>
+            
+            <table class="field">
+                <tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>⋯</th></tr>
+                <tr><th>1</th><td></td><td class="p1 attn">1</td><td></td><td></td><td></td></tr>
+                <tr><th>2</th><td class="p1 attn">1</td><td class="p1 attn"></td><td class="p1 attn">4</td><td></td><td></td></tr>
+                <tr><th>3</th><td></td><td class="p1 attn">1</td><td></td><td></td><td></td></tr>
+                <tr><th>⋮</th><td></td><td></td><td></td><td></td><td></td></tr>
+            </table>
+
+            <table class="field">
+                <tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>⋯</th></tr>
+                <tr><th>1</th><td></td><td class="p1">1</td><td class="p1 attn">1</td><td></td><td></td></tr>
+                <tr><th>2</th><td class="p1">1</td><td class="p1 attn">1</td><td class="p1 attn"></td><td class="p1 attn">1</td><td></td></tr>
+                <tr><th>3</th><td></td><td class="p1">1</td><td class="p1 attn">1</td><td></td><td></td></tr>
+                <tr><th>⋮</th><td></td><td></td><td></td><td></td><td></td></tr>
+            </table>
+            
+            <div class="cf"></div>
+        </div>
+        
+        <p>
+            Remember: you do not want large numbers of stones next to highly populated enemy territory unless you are sure you'll be able to reach critical mass first!
+        </p>
+        
+        <hr>
+        
+        <div class="tc">
+            <table class="field">
+                <tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>⋯</th></tr>
+                <tr><th>1</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>2</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>3</th><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>⋮</th><td></td><td></td><td></td><td></td><td></td></tr>
+            </table>
+        </div>
+        
+    </body>
+</html>
